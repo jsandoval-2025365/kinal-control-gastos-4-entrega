@@ -1,0 +1,199 @@
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+        <img src="../../../assets/images/logo-raccoonit.png" alt="Raccoonit logo" class="logo">
+      <span>Raccoonit</span>
+    </div>
+    <nav>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        <span>Ingresos</span>
+      </a>
+      <a class="nav-item active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        <span>Gastos</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16M7 19V9m5 10V5m5 14v-7"/></svg>
+        <span>Presupuesto</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15z"/></svg>
+        <span>Configuración</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar">MG</div>
+        <div class="user-meta">
+          <div class="name">María Gómez</div>
+          <div class="role">Cuenta personal</div>
+        </div>
+      </div>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span>Cerrar sesión</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="topbar">
+      <div>
+        <h1>Gastos</h1>
+        <div class="sub">Registrá y clasificá tus gastos por categoría</div>
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+        <button class="btn ghost">Exportar</button>
+        <button class="btn">+ Agregar gasto</button>
+      </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="card kpi main">
+        <div class="kpi-label">Total gastado este mes</div>
+        <div class="kpi-value">Q 6,430</div>
+        <div class="kpi-delta down">▲ 3.4% vs. julio</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-label">Categorías activas</div>
+        <div class="kpi-value">4</div>
+        <div class="kpi-note">12 gastos registrados</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-label">Categoría con mayor gasto</div>
+        <div class="kpi-value" style="font-size:20px;">Vivienda</div>
+        <div class="kpi-note">50% del total gastado</div>
+      </div>
+    </div>
+
+    <!-- CATEGORÍAS -->
+    <div class="section-title">Sus categorías de gasto</div>
+    <div class="section-sub">Consulte el detalle de cada categoría o agregue un gasto nuevo</div>
+
+    <div class="cat-grid">
+      <div class="cat-card">
+        <div class="cat-head">
+          <div class="avatar" style="background:#1F3A5A; color:#fff;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          </div>
+          <div class="meta"><div class="name">Vivienda</div><div class="count">5 gastos este mes</div></div>
+        </div>
+        <div class="cat-amt"><span class="label">Total del mes</span>Q 3,200</div>
+        <ul class="cat-list">
+          <li><span class="desc">Alquiler</span><span class="amt">Q 2,800</span></li>
+          <li><span class="desc">Mantenimiento</span><span class="amt">Q 400</span></li>
+        </ul>
+        <button class="btn small full">+ Agregar gasto</button>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-head">
+          <div class="avatar" style="background:#0052FF; color:#fff;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2l1.5 1.5M3 7h18M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/></svg>
+          </div>
+          <div class="meta"><div class="name">Comida</div><div class="count">4 gastos este mes</div></div>
+        </div>
+        <div class="cat-amt"><span class="label">Total del mes</span>Q 1,600</div>
+        <ul class="cat-list">
+          <li><span class="desc">Supermercado</span><span class="amt">Q 980</span></li>
+          <li><span class="desc">Restaurantes</span><span class="amt">Q 620</span></li>
+        </ul>
+        <button class="btn small full">+ Agregar gasto</button>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-head">
+          <div class="avatar" style="background:#FF6B4A; color:#fff;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="15" height="10" rx="2"/><path d="M18 10h2l2 3v4h-4"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>
+          </div>
+          <div class="meta"><div class="name">Transporte</div><div class="count">3 gastos este mes</div></div>
+        </div>
+        <div class="cat-amt"><span class="label">Total del mes</span>Q 1,150</div>
+        <ul class="cat-list">
+          <li><span class="desc">Combustible</span><span class="amt">Q 700</span></li>
+          <li><span class="desc">Transporte público</span><span class="amt">Q 450</span></li>
+        </ul>
+        <button class="btn small full">+ Agregar gasto</button>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-head">
+          <div class="avatar" style="background:#4ECDC4; color:#1F3A5A;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 11-14h-7l1-6z"/></svg>
+          </div>
+          <div class="meta"><div class="name">Servicios</div><div class="count">3 gastos este mes</div></div>
+        </div>
+        <div class="cat-amt"><span class="label">Total del mes</span>Q 480</div>
+        <ul class="cat-list">
+          <li><span class="desc">Electricidad</span><span class="amt">Q 280</span></li>
+          <li><span class="desc">Agua</span><span class="amt">Q 120</span></li>
+        </ul>
+        <button class="btn small full">+ Agregar gasto</button>
+      </div>
+
+      <div class="add-cat-card">
+        <div class="plus">+</div>
+        <span>Agregar categoría</span>
+      </div>
+    </div>
+
+    <!-- HISTORIAL RECIENTE -->
+    <div class="section-title">Historial reciente</div>
+    <div class="section-sub">Últimos gastos registrados en todas sus categorías</div>
+
+    <div class="card history-card">
+      <div class="history-row head">
+        <span>Fecha</span><span>Categoría</span><span>Descripción</span><span>Monto</span>
+      </div>
+      <div class="history-row">
+        <span class="date">27 ago</span>
+        <span class="cat"><span class="dot" style="background:#1F3A5A"></span>Vivienda</span>
+        <span class="desc">Alquiler de agosto</span>
+        <span class="amt">– Q 2,800</span>
+      </div>
+      <div class="history-row">
+        <span class="date">24 ago</span>
+        <span class="cat"><span class="dot" style="background:#0052FF"></span>Comida</span>
+        <span class="desc">Supermercado La Torre</span>
+        <span class="amt">– Q 540</span>
+      </div>
+      <div class="history-row">
+        <span class="date">22 ago</span>
+        <span class="cat"><span class="dot" style="background:#FF6B4A"></span>Transporte</span>
+        <span class="desc">Combustible</span>
+        <span class="amt">– Q 350</span>
+      </div>
+      <div class="history-row">
+        <span class="date">18 ago</span>
+        <span class="cat"><span class="dot" style="background:#4ECDC4"></span>Servicios</span>
+        <span class="desc">Factura de electricidad</span>
+        <span class="amt">– Q 280</span>
+      </div>
+      <div class="history-row">
+        <span class="date">15 ago</span>
+        <span class="cat"><span class="dot" style="background:#1F3A5A"></span>Vivienda</span>
+        <span class="desc">Mantenimiento del edificio</span>
+        <span class="amt">– Q 400</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MOBILE FAB + BOTTOM NAV -->
+<button class="fab">+</button>
+<nav class="bottom-nav">
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Ingresos</a>
+  <a class="active" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Gastos</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16M7 19V9m5 10V5m5 14v-7"/></svg>Presupuesto</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87"/></svg>Config</a>
+</nav>
