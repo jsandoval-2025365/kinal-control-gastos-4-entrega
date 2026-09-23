@@ -1,7 +1,9 @@
 import { prisma } from "../../config/prisma";
 import { Errors } from "../../utils/AppError";
 import { Role } from "@prisma/client";
+import { hashPassword } from "../../utils/password";
 import { authService } from "../auth/auth.service";
+import { CreateUserInput } from "./user.validators";
 
 export class UserService {
   async getProfile(userId: string) {
@@ -18,6 +20,34 @@ export class UserService {
     return prisma.user.findMany({
       select: { id: true, email: true, role: true, createdAt: true },
       orderBy: { createdAt: "desc" },
+    });
+  }
+
+  /**
+   * Solo ADMIN. Crea un usuario nuevo. Es la contraparte administrativa
+   * del registro público (`authService.register`), con dos diferencias:
+   *  - Permite asignar un rol explícito (por defecto USER).
+   *  - No crea sesión ni emite JWT: el admin crea la cuenta, el usuario
+   *    inicia sesión después con su email y contraseña.
+   * El hashing usa EXACTAMENTE la misma función Argon2id que el resto del
+   * proyecto (`hashPassword`), así el login existente sigue funcionando
+   * para los usuarios creados desde aquí.
+   */
+  async createUser(input: CreateUserInput) {
+    const existing = await prisma.user.findUnique({ where: { email: input.email } });
+    if (existing) {
+      throw Errors.conflict("El email ya está registrado");
+    }
+
+    const passwordHash = await hashPassword(input.password);
+
+    return prisma.user.create({
+      data: {
+        email: input.email,
+        passwordHash,
+        role: input.role ?? Role.USER,
+      },
+      select: { id: true, email: true, role: true, createdAt: true },
     });
   }
 
