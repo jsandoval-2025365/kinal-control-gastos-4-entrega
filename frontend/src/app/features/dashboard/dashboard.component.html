@@ -66,7 +66,7 @@
     <div class="topbar">
       <div>
         <h1>Dashboard</h1>
-        <div class="sub">Hola {{ auth.currentUser()?.email }} — así está tu mes de agosto</div>
+        <div class="sub">Hola {{ auth.currentUser()?.email }} — así está tu mes de {{ monthName }}</div>
       </div>
       <div class="topbar-actions">
         <div class="icon-btn" (click)="goTo('/settings')">
@@ -81,26 +81,34 @@
     <div class="kpi-row">
       <div class="card kpi income">
         <div class="kpi-label">Ingresos del mes</div>
-        <div class="kpi-value">Q 18,450</div>
-        <div class="kpi-delta up">▲ 6.2% vs. julio</div>
+        <div class="kpi-value">{{ formatAmount(incomeMonth()) }}</div>
+        @if (incomeDeltaPct() !== null) {
+          <div class="kpi-delta up">▲ {{ formatPct(incomeDeltaPct()!) }} vs. mes anterior</div>
+        } @else {
+          <div class="kpi-delta">Sin datos del mes anterior</div>
+        }
       </div>
       <div class="card kpi">
         <div class="kpi-label">Gastos del mes</div>
-        <div class="kpi-value">Q 12,180</div>
-        <div class="kpi-delta down">▲ 3.4% vs. julio</div>
+        <div class="kpi-value">{{ formatAmount(expenseMonth()) }}</div>
+        @if (expenseDeltaPct() !== null) {
+          <div class="kpi-delta down">▲ {{ formatPct(expenseDeltaPct()!) }} vs. mes anterior</div>
+        } @else {
+          <div class="kpi-delta">Sin datos del mes anterior</div>
+        }
       </div>
       <div class="card ring-card">
         <div class="ring-wrap">
           <svg viewBox="0 0 88 88">
             <circle cx="44" cy="44" r="38" fill="none" stroke="#F4F6F8" stroke-width="9"/>
             <circle cx="44" cy="44" r="38" fill="none" stroke="#4ECDC4" stroke-width="9"
-              stroke-dasharray="238.7" stroke-dashoffset="88" stroke-linecap="round"/>
+              stroke-dasharray="238.7" [attr.stroke-dashoffset]="ringOffset()" stroke-linecap="round"/>
           </svg>
-          <div class="ring-center"><b>63%</b><span>libre</span></div>
+          <div class="ring-center"><b>{{ freePct().toFixed(0) }}%</b><span>libre</span></div>
         </div>
         <div class="ring-info">
           <div class="kpi-label">Dinero no asignado</div>
-          <div class="kpi-value" style="font-size:22px;">Q 6,270</div>
+          <div class="kpi-value" style="font-size:22px;">{{ formatAmount(freeMonth()) }}</div>
           <div class="card-sub">Sin comprometer en presupuesto</div>
         </div>
       </div>
@@ -109,37 +117,43 @@
     <!-- BUDGET + COMPARISON -->
     <div class="row-2col">
       <div class="card">
-        <div class="card-title">Presupuesto y alertas</div>
-        <div class="card-sub">Consumo por categoría — agosto</div>
+        <div class="card-title">Gasto por categoría</div>
+        <div class="card-sub">Consumo real de {{ monthName }}</div>
 
-        <div class="budget-item">
-          <div class="budget-top"><span class="cat">Vivienda</span><span class="amt">Q 3,200 / Q 4,000</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
-        </div>
-        <div class="budget-item">
-          <div class="budget-top"><span class="cat">Comida <span class="badge">80% usado</span></span><span class="amt">Q 1,600 / Q 2,000</span></div>
-          <div class="bar-track"><div class="bar-fill warn" style="width:80%"></div></div>
-        </div>
-        <div class="budget-item">
-          <div class="budget-top"><span class="cat">Transporte <span class="badge">Superado</span></span><span class="amt">Q 1,150 / Q 1,000</span></div>
-          <div class="bar-track"><div class="bar-fill warn" style="width:100%"></div></div>
-        </div>
-        <div class="budget-item">
-          <div class="budget-top"><span class="cat">Servicios</span><span class="amt">Q 480 / Q 1,200</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
-        </div>
+        @if (!monthlyCategoryBreakdown().length) {
+          <div class="budget-item"><span class="cat">Sin gastos registrados este mes.</span></div>
+        }
+
+        @for (item of monthlyCategoryBreakdown(); track item.category) {
+          <div class="budget-item">
+            <div class="budget-top">
+              <span class="cat">{{ categoryLabel(item.category) }}
+                @if (expenseMonth() > 0) {
+                  <span class="badge">{{ formatPct((item.total / expenseMonth()) * 100) }} del mes</span>
+                }
+              </span>
+              <span class="amt">{{ formatAmount(item.total) }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.width.%]="expenseMonth() > 0 ? (item.total / expenseMonth()) * 100 : 0"></div>
+            </div>
+          </div>
+        }
       </div>
 
       <div class="card">
         <div class="card-title">Ingresos vs. gastos</div>
         <div class="card-sub">Últimos 6 meses</div>
         <div class="chart-area">
-          <div class="chart-col"><div class="bars"><div class="b-income" style="height:70px"></div><div class="b-expense" style="height:50px"></div></div><span>Mar</span></div>
-          <div class="chart-col"><div class="bars"><div class="b-income" style="height:82px"></div><div class="b-expense" style="height:60px"></div></div><span>Abr</span></div>
-          <div class="chart-col"><div class="bars"><div class="b-income" style="height:65px"></div><div class="b-expense" style="height:68px"></div></div><span>May</span></div>
-          <div class="chart-col"><div class="bars"><div class="b-income" style="height:90px"></div><div class="b-expense" style="height:55px"></div></div><span>Jun</span></div>
-          <div class="chart-col"><div class="bars"><div class="b-income" style="height:78px"></div><div class="b-expense" style="height:62px"></div></div><span>Jul</span></div>
-          <div class="chart-col"><div class="bars"><div class="b-income" style="height:110px"></div><div class="b-expense" style="height:74px"></div></div><span>Ago</span></div>
+          @for (point of lastSixMonths(); track point.label) {
+            <div class="chart-col">
+              <div class="bars">
+                <div class="b-income" [style.height.px]="barHeight(point.income)"></div>
+                <div class="b-expense" [style.height.px]="barHeight(point.expense)"></div>
+              </div>
+              <span>{{ point.label }}</span>
+            </div>
+          }
         </div>
         <div class="legend">
           <span><i style="background:var(--cobalt)"></i>Ingresos</span>
@@ -151,26 +165,24 @@
     <!-- CHART CATEGORY -->
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">Gasto por categoría</div>
-      <div class="card-sub">Distribución de agosto</div>
+      <div class="card-sub">Distribución de {{ monthName }}</div>
       <div class="donut-row" style="margin-top:16px;">
         <div class="donut-wrap">
           <svg viewBox="0 0 42 42">
             <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#F4F6F8" stroke-width="6"></circle>
-            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#1F3A5A" stroke-width="6"
-              stroke-dasharray="26 74" stroke-dashoffset="25" ></circle>
-            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#0052FF" stroke-width="6"
-              stroke-dasharray="13 87" stroke-dashoffset="-1" ></circle>
-            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#FF6B4A" stroke-width="6"
-              stroke-dasharray="9 91" stroke-dashoffset="-14" ></circle>
-            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#4ECDC4" stroke-width="6"
-              stroke-dasharray="4 96" stroke-dashoffset="-23" ></circle>
+            @for (seg of donutSegments(); track seg.category) {
+              <circle cx="21" cy="21" r="15.9" fill="transparent" [attr.stroke]="seg.color" stroke-width="6"
+                [attr.stroke-dasharray]="seg.pct.toFixed(2) + ' ' + (100 - seg.pct).toFixed(2)"
+                [attr.stroke-dashoffset]="seg.offset.toFixed(2)"></circle>
+            }
           </svg>
         </div>
         <div class="donut-legend">
-          <div class="item"><span class="dot" style="background:#1F3A5A"></span>Vivienda<b>26%</b></div>
-          <div class="item"><span class="dot" style="background:#0052FF"></span>Comida<b>13%</b></div>
-          <div class="item"><span class="dot" style="background:#FF6B4A"></span>Transporte<b>9%</b></div>
-          <div class="item"><span class="dot" style="background:#4ECDC4"></span>Servicios<b>4%</b></div>
+          @for (seg of donutSegments(); track seg.category) {
+            <div class="item"><span class="dot" [style.background]="seg.color"></span>{{ seg.label }}<b>{{ seg.pct.toFixed(0) }}%</b></div>
+          } @empty {
+            <div class="item">Sin gastos este mes.</div>
+          }
         </div>
       </div>
     </div>
@@ -179,36 +191,28 @@
     <div class="row-2col" style="margin-bottom:0;">
       <div class="card">
         <div class="card-title">Fuentes de ingreso</div>
-        <div class="card-sub">3 fuentes activas</div>
+        <div class="card-sub">{{ incomeSources().length }} fuente(s) activa(s)</div>
 
-        <div class="source-item">
-          <div class="source-left"><div class="source-icon">SP</div>
-            <div><div class="source-name">Sueldo principal</div><div class="source-freq">Mensual</div></div>
+        @for (source of incomeSources(); track source.source) {
+          <div class="source-item">
+            <div class="source-left"><div class="source-icon">{{ source.source.slice(0, 2).toUpperCase() }}</div>
+              <div><div class="source-name">{{ source.source }}</div><div class="source-freq">{{ frequencyLabel(source.frequency) }}</div></div>
+            </div>
+            <div class="source-amt">{{ formatAmount(source.total) }}</div>
           </div>
-          <div class="source-amt">Q 14,000</div>
-        </div>
-        <div class="source-item">
-          <div class="source-left"><div class="source-icon">FL</div>
-            <div><div class="source-name">Freelance diseño</div><div class="source-freq">Variable</div></div>
-          </div>
-          <div class="source-amt">Q 3,450</div>
-        </div>
-        <div class="source-item">
-          <div class="source-left"><div class="source-icon">RE</div>
-            <div><div class="source-name">Renta de local</div><div class="source-freq">Mensual</div></div>
-          </div>
-          <div class="source-amt">Q 1,000</div>
-        </div>
+        } @empty {
+          <div class="source-item"><span class="cat">Sin ingresos registrados.</span></div>
+        }
       </div>
 
       <div class="card stack-card">
         <div>
           <div class="card-title">Resumen mensual</div>
-          <div class="card-sub">Agosto 2026</div>
+          <div class="card-sub">{{ monthName }}</div>
         </div>
-        <div class="mini-row"><span class="label">Total ingresado</span><span class="val">Q 18,450</span></div>
-        <div class="mini-row"><span class="label">Total gastado</span><span class="val">Q 12,180</span></div>
-        <div class="mini-row"><span class="label">Ahorro del mes</span><span class="val" style="color:#1E9E6C">Q 6,270</span></div>
+        <div class="mini-row"><span class="label">Total ingresado</span><span class="val">{{ formatAmount(incomeMonth()) }}</span></div>
+        <div class="mini-row"><span class="label">Total gastado</span><span class="val">{{ formatAmount(expenseMonth()) }}</span></div>
+        <div class="mini-row"><span class="label">Ahorro del mes</span><span class="val" style="color:#1E9E6C">{{ formatAmount(freeMonth()) }}</span></div>
         <div class="divider"></div>
         <div class="tax-box">
           <div>

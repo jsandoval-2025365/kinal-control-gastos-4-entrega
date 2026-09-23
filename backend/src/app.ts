@@ -6,6 +6,7 @@ import { env } from "./config/env";
 import { authRouter } from "./modules/auth/auth.routes";
 import { userRouter, adminRouter, noteRouter } from "./modules/users/user.routes";
 import { incomeRouter } from "./modules/income/income.routes";
+import { expenseRouter } from "./modules/expense/expense.routes";
 import { errorHandler } from "./middleware/errorHandler";
 import { generateToken, doubleCsrfProtection } from "./config/csrf";
 
@@ -43,12 +44,15 @@ export function createApp() {
   app.use("/api/admin", doubleCsrfProtection);
   app.use("/api/notes", doubleCsrfProtection);
   app.use("/api/income", doubleCsrfProtection);
+  app.use("/api/expenses", doubleCsrfProtection);
 
   app.use("/api/auth", authRouter);
   app.use("/api/users", userRouter);
   app.use("/api/admin", adminRouter);
   app.use("/api/notes", noteRouter);
   app.use("/api/income", incomeRouter);
+  app.use("/api/expenses", expenseRouter);
+  
 
   app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
