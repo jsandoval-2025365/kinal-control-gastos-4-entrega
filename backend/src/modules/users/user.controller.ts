@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { userService } from "./user.service";
-import { changeRoleSchema, createNoteSchema } from "./user.validators";
+import { changeRoleSchema, createNoteSchema, createUserSchema } from "./user.validators";
 import { Errors } from "../../utils/AppError";
 
 export const getMyProfile = asyncHandler(async (req: Request, res: Response) => {
@@ -13,6 +13,13 @@ export const getMyProfile = asyncHandler(async (req: Request, res: Response) => 
 export const listUsers = asyncHandler(async (_req: Request, res: Response) => {
   const users = await userService.listUsers();
   res.status(200).json({ users });
+});
+
+/** POST /api/admin/users — solo ADMIN. Crea un usuario nuevo. */
+export const createUser = asyncHandler(async (req: Request, res: Response) => {
+  const input = createUserSchema.parse(req.body);
+  const user = await userService.createUser(input);
+  res.status(201).json({ user });
 });
 
 /** PATCH /api/admin/users/:id/role — solo ADMIN */
