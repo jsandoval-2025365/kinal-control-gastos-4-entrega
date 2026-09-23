@@ -24,7 +24,7 @@ enum IncomeFrequency {
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
-  passwordHash String //? // Ahora el passwordHash es opcional (?)
+  passwordHash String // Ahora el passwordHash es opcional (?)
 // googleId     String?  @unique
   role         Role     @default(USER)
   createdAt    DateTime @default(now())
