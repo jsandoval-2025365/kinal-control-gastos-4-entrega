@@ -13,6 +13,7 @@ userRouter.get("/profile", authenticate, userController.getMyProfile);
 
 // --- Recursos administrativos (requieren autenticación + rol ADMIN) ---
 adminRouter.get("/users", authenticate, authorize(Role.ADMIN), userController.listUsers);
+adminRouter.post("/users", authenticate, authorize(Role.ADMIN), userController.createUser);
 adminRouter.patch(
   "/users/:id/role",
   authenticate,
