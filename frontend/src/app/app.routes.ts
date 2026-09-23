@@ -34,15 +34,14 @@ export const routes: Routes = [
     path: "income",
     canActivate: [authGuard],
     loadComponent: () =>
-      import("./features/ingresos/ingresos.component").then((m) => m.IncomeComponent),
+      import("./features/income/income.component").then((m) => m.IncomeComponent),
   },
   // Secciones todavía no implementadas: muestran una vista genérica de "próximamente".
   {
     path: "expenses",
     canActivate: [authGuard],
     loadComponent: () =>
-      import("./shared/coming-soon/coming-soon.component").then((m) => m.ComingSoonComponent),
-    data: { title: "Gastos" },
+      import("./features/expenses/expenses.component").then((m) => m.ExpensesComponent),
   },
   {
     path: "budget",

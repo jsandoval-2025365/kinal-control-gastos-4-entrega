@@ -1,0 +1,222 @@
+<div class="app">
+  <!-- SIDEBAR (idéntico al Dashboard / Ingresos) -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">🦝</div>
+      <span>Raccoonit</span>
+    </div>
+
+    <nav>
+      <a class="nav-item" (click)="goTo('/dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" (click)="goTo('/income')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        <span>Ingresos</span>
+      </a>
+      <a class="nav-item active" (click)="goTo('/expenses')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        <span>Gastos</span>
+      </a>
+      <a class="nav-item" (click)="goTo('/budget')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16M7 19V9m5 10V5m5 14v-7"/></svg>
+        <span>Presupuesto</span>
+      </a>
+      <a class="nav-item" (click)="goTo('/settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15z"/></svg>
+        <span>Configuración</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-card-wrapper">
+        <div class="user-card" (click)="toggleUserMenu($event)">
+          <div class="avatar">{{ initials }}</div>
+          <div class="user-meta">
+            <div class="name">{{ auth.currentUser()?.email }}</div>
+            <div class="role">{{ auth.currentUser()?.role }}</div>
+          </div>
+        </div>
+
+        @if (userMenuOpen()) {
+          <div class="user-dropdown" (click)="$event.stopPropagation()">
+            <button type="button" class="user-dropdown__item" (click)="goTo('/settings')">
+              Ver configuración
+            </button>
+            <button type="button" class="user-dropdown__item" (click)="goTo('/settings')">
+              Mi cuenta
+            </button>
+          </div>
+        }
+      </div>
+
+      <a class="nav-item" (click)="onLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span>Cerrar sesión</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="topbar">
+      <div>
+        <h1>Gastos</h1>
+        <div class="sub">Registra y administra tus gastos del mes</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn" (click)="openCreateForm()">+ Agregar gasto</button>
+      </div>
+    </div>
+
+    @if (loadError()) {
+      <div class="error-banner">{{ loadError() }}</div>
+    }
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="card kpi">
+        <div class="kpi-label">Gastos del mes</div>
+        <div class="kpi-value">{{ formatAmount(totalThisMonth()) }}</div>
+        @if (monthDeltaPct() !== null) {
+          <div class="kpi-delta" [class.up]="monthDeltaPct()! < 0" [class.down]="monthDeltaPct()! >= 0">
+            {{ monthDeltaPct()! >= 0 ? "▲" : "▼" }} {{ formatPct(monthDeltaPct()!) }} vs. mes anterior
+          </div>
+        } @else {
+          <div class="kpi-delta">Sin datos del mes anterior</div>
+        }
+      </div>
+      <div class="card kpi">
+        <div class="kpi-label">Categoría principal</div>
+        @if (mainCategory(); as main) {
+          <div class="kpi-value" style="font-size:22px;">{{ categoryLabel(main.category) }}</div>
+          <div class="kpi-delta">{{ formatAmount(main.total) }} · {{ formatPct(mainCategoryShare()) }} del mes</div>
+        } @else {
+          <div class="kpi-value" style="font-size:22px;">—</div>
+          <div class="kpi-delta">Sin gastos este mes</div>
+        }
+      </div>
+      <div class="card kpi">
+        <div class="kpi-label">Movimientos del mes</div>
+        <div class="kpi-value" style="font-size:22px;">{{ byCategory().reduce((n, c) => n + c.count, 0) }}</div>
+        <div class="kpi-delta">{{ byCategory().length }} categoría(s) utilizada(s)</div>
+      </div>
+    </div>
+
+    <!-- FORMULARIO (alta / edición) -->
+    @if (formOpen()) {
+      <div class="card form-card">
+        <div class="card-title">{{ isEditMode ? "Editar gasto" : "Nuevo gasto" }}</div>
+        <div class="card-sub">Los campos marcados son obligatorios</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="exp-category">Categoría</label>
+            <select id="exp-category" [(ngModel)]="formCategory">
+              @for (cat of categories; track cat) {
+                <option [value]="cat">{{ categoryLabel(cat) }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label for="exp-amount">Monto (Q)</label>
+            <input id="exp-amount" type="number" min="0.01" step="0.01" [(ngModel)]="formAmount" placeholder="0.00" />
+          </div>
+          <div class="field">
+            <label for="exp-date">Fecha</label>
+            <input id="exp-date" type="date" [(ngModel)]="formDate" />
+          </div>
+          <div class="field field-wide">
+            <label for="exp-description">Descripción (opcional)</label>
+            <input id="exp-description" type="text" maxlength="200" [(ngModel)]="formDescription" placeholder="Ej. Supermercado semanal" />
+          </div>
+        </div>
+
+        @if (formError()) {
+          <div class="form-error">{{ formError() }}</div>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="btn ghost" (click)="closeForm()">Cancelar</button>
+          <button type="button" class="btn" [disabled]="saving()" (click)="submitForm()">
+            {{ saving() ? "Guardando…" : (isEditMode ? "Guardar cambios" : "Agregar gasto") }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- MOVIMIENTOS + CATEGORÍAS -->
+    <div class="row-2col">
+      <div class="card">
+        <div class="card-title">Movimientos recientes</div>
+        <div class="card-sub">
+          {{ loading() ? "Cargando…" : (expenses().length ? expenses().length + " registro(s) en total" : "Aún no has registrado gastos") }}
+        </div>
+
+        @if (!loading() && !expenses().length) {
+          <div class="empty-state">
+            <p>No tienes gastos registrados.</p>
+            <button type="button" class="btn" (click)="openCreateForm()">+ Agregar tu primer gasto</button>
+          </div>
+        }
+
+        @for (expense of recentMovements(); track expense.id) {
+          <div class="source-item">
+            <div class="source-left">
+              <div class="source-icon" [style.background]="categoryColor(expense.category)">
+                {{ categoryLabel(expense.category).slice(0, 2).toUpperCase() }}
+              </div>
+              <div>
+                <div class="source-name">
+                  {{ expense.description?.trim() ? expense.description : categoryLabel(expense.category) }}
+                </div>
+                <div class="source-freq">{{ categoryLabel(expense.category) }} · {{ formatShortDate(expense.date) }}</div>
+              </div>
+            </div>
+            <div class="source-amt">− {{ formatAmount(expense.amount) }}</div>
+            <div class="row-actions">
+              <button type="button" class="mini-btn" (click)="openEditForm(expense)">Editar</button>
+              <button type="button" class="mini-btn danger" (click)="deleteExpense(expense)">Eliminar</button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="card">
+        <div class="card-title">Gasto por categoría</div>
+        <div class="card-sub">Distribución del mes actual</div>
+
+        @if (!byCategory().length) {
+          <div class="empty-state"><p>Sin gastos este mes.</p></div>
+        }
+
+        @for (item of byCategory(); track item.category) {
+          <div class="budget-item">
+            <div class="budget-top">
+              <span class="cat">
+                <span class="dot" [style.background]="categoryColor(item.category)"></span>
+                {{ categoryLabel(item.category) }}
+                <span class="badge">{{ formatPct(categoryShare(item.total)) }}</span>
+              </span>
+              <span class="amt">{{ formatAmount(item.total) }} · {{ item.count }} mov.</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.width.%]="categoryShare(item.total)" [style.background]="categoryColor(item.category)"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MOBILE FAB + BOTTOM NAV -->
+<button class="fab" (click)="openCreateForm()">+</button>
+<nav class="bottom-nav">
+  <a (click)="goTo('/dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</a>
+  <a (click)="goTo('/income')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Ingresos</a>
+  <a class="active" (click)="goTo('/expenses')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Gastos</a>
+  <a (click)="goTo('/budget')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16M7 19V9m5 10V5m5 14v-7"/></svg>Presupuesto</a>
+  <a (click)="goTo('/settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>Config</a>
+</nav>  
